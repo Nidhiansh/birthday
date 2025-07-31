@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Play, Heart, Sparkles, Home } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,21 @@ export default function FinalePage() {
   const [showVideo, setShowVideo] = useState(false)
   const [showFireworks, setShowFireworks] = useState(false)
   const [showFinalMessage, setShowFinalMessage] = useState(false)
+  const [windowHeight, setWindowHeight] = useState(800) // Default fallback
+
+  // Handle window height safely
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setWindowHeight(window.innerHeight)
+      
+      const handleResize = () => {
+        setWindowHeight(window.innerHeight)
+      }
+      
+      window.addEventListener('resize', handleResize)
+      return () => window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   const playVideo = () => {
     setShowVideo(true)
@@ -68,7 +83,7 @@ export default function FinalePage() {
               fontSize: `${16 + Math.random() * 20}px`,
             }}
             animate={{
-              y: [window.innerHeight + 100, -100],
+              y: [windowHeight + 100, -100], // Use state instead of window.innerHeight
               rotate: [0, 360],
               opacity: [0, 0.6, 0],
             }}
@@ -125,14 +140,14 @@ export default function FinalePage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="text-center max-w-2xl mx-auto" // Reduced max-width for vertical video
+            className="text-center max-w-2xl mx-auto"
           >
             <div className="bg-black rounded-2xl overflow-hidden shadow-2xl mb-8">
               <video
-                className="w-full h-auto max-h-[70vh] object-contain" // Adjusted for vertical video
+                className="w-full h-auto max-h-[70vh] object-contain"
                 controls
                 autoPlay
-                muted // Required for autoplay in most browsers
+                muted
                 onEnded={() => {
                   setShowFireworks(true)
                   setTimeout(() => {
