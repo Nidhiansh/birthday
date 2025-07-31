@@ -9,10 +9,17 @@ import Link from "next/link"
 export default function HomePage() {
   const [musicPlaying, setMusicPlaying] = useState(false)
   const [showContent, setShowContent] = useState(false)
+  const [windowHeight, setWindowHeight] = useState(0)
 
   useEffect(() => {
     const timer = setTimeout(() => setShowContent(true), 500)
     return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setWindowHeight(window.innerHeight)
+    }
   }, [])
 
   const toggleMusic = () => {
@@ -56,7 +63,7 @@ export default function HomePage() {
               fontSize: `${20 + Math.random() * 20}px`,
             }}
             animate={{
-              y: [-100, window.innerHeight + 100],
+              y: [-100, windowHeight + 100],
               rotate: [0, 360],
               opacity: [0, 0.6, 0],
             }}
